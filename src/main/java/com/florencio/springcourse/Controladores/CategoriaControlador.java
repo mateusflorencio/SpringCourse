@@ -1,4 +1,4 @@
-package com.florencio.springcourse.Controladores;
+package com.florencio.springcourse.controladores;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
