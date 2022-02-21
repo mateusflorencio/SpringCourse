@@ -11,12 +11,15 @@
 		<relativePath /> <!-- lookup parent from repository -->
 
 	</parent>
+	
+	
 	<groupId>com.florencio</groupId>
 	<artifactId>course</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>course</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
+	
 		<java.version>11</java.version>
 	</properties>
 	<dependencies>
@@ -42,10 +45,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+		</dependency>	
 
 	</dependencies>
 
