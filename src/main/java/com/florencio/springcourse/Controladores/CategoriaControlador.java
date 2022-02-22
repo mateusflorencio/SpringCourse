@@ -43,7 +43,8 @@ public class CategoriaControlador{
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
-	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody Categoria obj){
+	public ResponseEntity<Void> update(@Valid @PathVariable Integer id,@RequestBody CategoriaDTO objDto){
+		Categoria obj=service.fromDto(objDto);
 		obj.setId(id);
 		service.update(obj);
 		return ResponseEntity.noContent().build();
