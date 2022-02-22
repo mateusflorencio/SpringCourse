@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.florencio.springcourse.services.exceptions.DataIntegrityException;
 import com.florencio.springcourse.services.exceptions.ObjectNotFoundException;
 
 @ControllerAdvice
@@ -16,5 +17,12 @@ public class ManipuladorDeExcecoesDoControlador {
 	public ResponseEntity<ErrosPadrao> objectNotFound(ObjectNotFoundException e, HttpServletRequest request){
 		ErrosPadrao err=new ErrosPadrao(HttpStatus.NOT_FOUND.value(), e.getMessage(), System.currentTimeMillis());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+	}
+	
+	@ExceptionHandler (DataIntegrityException.class)//erro desse tipo de objeto
+	public ResponseEntity<ErrosPadrao> dataIntegrity(DataIntegrityException e, HttpServletRequest request){
+		
+		ErrosPadrao err=new ErrosPadrao(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
 }
