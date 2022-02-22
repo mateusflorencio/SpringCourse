@@ -1,15 +1,16 @@
 package com.florencio.springcourse.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.florencio.springcourse.services.exceptions.DataIntegrityException;
-import com.florencio.springcourse.services.exceptions.ObjectNotFoundException;
 import com.florencio.springcourse.domain.Categoria;
 import com.florencio.springcourse.repositories.CategoriaRepository;
+import com.florencio.springcourse.services.exceptions.DataIntegrityException;
+import com.florencio.springcourse.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class CategoriaService {
@@ -40,7 +41,10 @@ public class CategoriaService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possivel excluir essa categoria: possui produto");
 		}
-		
-		
+
+	}
+
+	public List<Categoria> findAll() {
+		return repo.findAll();
 	}
 }
