@@ -2,21 +2,38 @@ package com.florencio.springcourse.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
+import com.florencio.springcourse.services.validation.ClienteInsert;
+
+@ClienteInsert
 public class ClienteNewDTO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
+	@NotEmpty (message = "preenchimento obrigatório")
+	@Size(min = 5, max = 120, message = "Deve haver a inserção de 5 a 120 caracteres")
 	private String nome;
+	@NotEmpty (message = "preenchimento obrigatório")
+	@Email (message = "inserir um email adequado")
 	private String email;
+	
+	@NotEmpty (message = "preenchimento obrigatório")
 	private String cpfOuCnpj;
 	private Integer tipo;
 	
+	@NotEmpty (message = "preenchimento obrigatório")
 	private String logradouro;
+	@NotEmpty (message = "preenchimento obrigatório")
 	private String numero;
 	private String complemento;
 	private String bairro;
+	@NotEmpty (message = "preenchimento obrigatório")
 	private String cep;
 	
+	@NotEmpty (message = "preenchimento obrigatório")
 	private String telefone1;
 	private String telefone2;
 	private String telefone3;
