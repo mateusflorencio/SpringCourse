@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +35,8 @@ public class CategoriaControlador{
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody Categoria obj){ //o requestBody é para converte o json para java
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto){ //o requestBody é para converte o json para java
+		Categoria obj= service.fromDto(objDto);
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
@@ -59,7 +62,7 @@ public class CategoriaControlador{
 		return ResponseEntity.ok().body(listDto);
 	}
 	
-	@RequestMapping(value= "/page", method=RequestMethod.GET)
+	@RequestMapping(value= "/page", method=RequestMethod.GET) // endpoint com springData 
 	public ResponseEntity<Page<CategoriaDTO>> findPage(
 			@RequestParam (value = "page", defaultValue = "0") Integer page, 
 			@RequestParam (value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
