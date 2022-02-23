@@ -15,7 +15,7 @@ import com.florencio.springcourse.domain.Endereco;
 import com.florencio.springcourse.domain.Estado;
 import com.florencio.springcourse.domain.ItemPedido;
 import com.florencio.springcourse.domain.Pagamento;
-import com.florencio.springcourse.domain.PagamentoBoleto;
+import com.florencio.springcourse.domain.PagamentoComBoleto;
 import com.florencio.springcourse.domain.PagamentoComCartao;
 import com.florencio.springcourse.domain.Pedido;
 import com.florencio.springcourse.domain.Produto;
@@ -130,7 +130,7 @@ public class SpringCourseApplication implements CommandLineRunner {
 
 		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
 		ped1.setPagamento(pagto1);
-		Pagamento pagto2 = new PagamentoBoleto(null, EstadoPagamento.PENDENDE, ped2, sdf.parse("20/10/2017 00:00"),
+		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"),
 				null);
 		ped2.setPagamento(pagto2);
 

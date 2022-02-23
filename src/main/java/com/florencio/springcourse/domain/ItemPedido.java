@@ -40,6 +40,15 @@ public class ItemPedido implements Serializable {
 	public Pedido getPedido() {
 		return id.getPedido();
 	}
+	
+	//adicionar o pedido ao item pedido. O frameWork para inserir o produto só consegue atraves do metodo set, e não pelo construtor
+	public void setPedido(Pedido pedido) {
+		id.setPedido(pedido);
+	}
+	
+	public void setProduto(Produto produto) {
+		id.setProduto(produto);
+	}
 
 	
 	public Produto getProduto() {
