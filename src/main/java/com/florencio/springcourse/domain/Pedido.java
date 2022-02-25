@@ -1,8 +1,11 @@
 package com.florencio.springcourse.domain;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import net.bytebuddy.agent.builder.AgentBuilder.FallbackStrategy.Simple;
 
 @Entity
 public class Pedido implements Serializable {
@@ -34,7 +39,6 @@ public class Pedido implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
-
 	private Cliente cliente;
 
 	@ManyToOne
@@ -127,6 +131,29 @@ public class Pedido implements Serializable {
 			return false;
 		Pedido other = (Pedido) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		NumberFormat nf=NumberFormat.getCurrencyInstance (new Locale( "pr", "BR"));
+		SimpleDateFormat sdf= new SimpleDateFormat("dd/MM/yyy hh:mm:ss");
+		StringBuilder builder = new StringBuilder();
+		builder.append("Pedido numero= ");
+		builder.append(getId());
+		builder.append(", Instate: ");
+		builder.append(sdf.format(getInstante()));
+		builder.append(", cliente: ");
+		builder.append(getCliente().getNome());
+		builder.append("Situação do pagamento: ");
+		builder.append(getPagamento().getEstado().getDescricao());
+		builder.append("\nDetalhes:\n");
+		for (ItemPedido x : itens) {
+			builder.append(x.toString());
+		}
+	
+		builder.append("\nValor total\n");
+		builder.append(nf.format(getTotal()));
+		return builder.toString();
 	}
 
 }
