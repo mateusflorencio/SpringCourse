@@ -16,20 +16,29 @@ public class ClienteNewDTO implements Serializable{
 	@NotEmpty (message = "preenchimento obrigatório")
 	@Size(min = 5, max = 120, message = "Deve haver a inserção de 5 a 120 caracteres")
 	private String nome;
+	
 	@NotEmpty (message = "preenchimento obrigatório")
 	@Email (message = "inserir um email adequado")
 	private String email;
 	
 	@NotEmpty (message = "preenchimento obrigatório")
 	private String cpfOuCnpj;
+	
 	private Integer tipo;
+	
+	@NotEmpty(message="Preenchimento obrigatório")
+	private String senha;
 	
 	@NotEmpty (message = "preenchimento obrigatório")
 	private String logradouro;
+	
 	@NotEmpty (message = "preenchimento obrigatório")
 	private String numero;
+	
 	private String complemento;
+	
 	private String bairro;
+	
 	@NotEmpty (message = "preenchimento obrigatório")
 	private String cep;
 	
@@ -74,6 +83,14 @@ public class ClienteNewDTO implements Serializable{
 
 	public void setTipo(Integer tipo) {
 		this.tipo = tipo;
+	}
+	
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public String getLogradouro() {
