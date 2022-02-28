@@ -4,15 +4,27 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.florencio.springcourse.domain.Categoria;
+import com.florencio.springcourse.domain.Cliente;
 import com.florencio.springcourse.domain.ItemPedido;
 import com.florencio.springcourse.domain.PagamentoComBoleto;
 import com.florencio.springcourse.domain.Pedido;
 import com.florencio.springcourse.domain.enums.EstadoPagamento;
+import com.florencio.springcourse.dto.CategoriaDTO;
 import com.florencio.springcourse.repositories.ItemPedidoRepository;
 import com.florencio.springcourse.repositories.PagamentoRepository;
 import com.florencio.springcourse.repositories.PedidoRepository;
+import com.florencio.springcourse.security.UserSS;
+import com.florencio.springcourse.services.exceptions.AuthorizationException;
 import com.florencio.springcourse.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -67,4 +79,14 @@ public class PedidoService {
 		
 		return obj;
 	}
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Cliente cliente =  clienteService.find(user.getId());
+		return pedidoRepository.findByCliente(cliente, pageRequest);
+	}
+	
 }
