@@ -20,6 +20,7 @@ import com.florencio.springcourse.domain.PagamentoComCartao;
 import com.florencio.springcourse.domain.Pedido;
 import com.florencio.springcourse.domain.Produto;
 import com.florencio.springcourse.domain.enums.EstadoPagamento;
+import com.florencio.springcourse.domain.enums.Perfil;
 import com.florencio.springcourse.domain.enums.TipoCliente;
 import com.florencio.springcourse.repositories.CategoriaRepository;
 import com.florencio.springcourse.repositories.CidadeRepository;
@@ -111,14 +112,20 @@ public class DBService {
 		Cliente cli1 = new Cliente(null, "Maria silva", "limateusflorencio@gmail.com", "3215489754",
 				TipoCliente.PESSOAFISICA, pe.encode("123"));
 		cli1.getTelefones().addAll(Arrays.asList("11433512725", "11548455456"));
+		
+		Cliente cli2 = new Cliente(null, "Ana Costa", "nelio.iftm@gmail.com", "31628382740", TipoCliente.PESSOAFISICA, pe.encode("123"));
+		cli2.getTelefones().addAll(Arrays.asList("93883321", "34252625"));
+		cli2.addPerfil(Perfil.ADMIN);
+
 
 		Endereco e1 = new Endereco(null, "Rua Flores", "300", "apto 300", "jardim", "38945000", cli1, c1);
 		Endereco e2 = new Endereco(null, "Rua marta", "545", "apto 7848", "Bernardo", "48744568", cli1, c2);
-
+		Endereco e3 = new Endereco(null, "Avenida Floriano", "2106", null, "Centro", "281777012", cli2, c2);
+		
 		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
 
-		clienteRepository.saveAll(Arrays.asList(cli1));
-		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+		clienteRepository.saveAll(Arrays.asList(cli1, cli2));
+		enderecoRepository.saveAll(Arrays.asList(e1, e2, e3));
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
