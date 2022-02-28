@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.florencio.springcourse.services.exceptions.AuthorizationException;
 import com.florencio.springcourse.services.exceptions.DataIntegrityException;
 import com.florencio.springcourse.services.exceptions.ObjectNotFoundException;
 
@@ -38,5 +39,11 @@ public class ManipuladorDeExcecoesDoControlador {
 			err.addError(x.getField(), x.getDefaultMessage());
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+	
+	@ExceptionHandler(AuthorizationException.class) // erro desse tipo de objeto
+	public ResponseEntity<ErrosPadrao> authorization(ObjectNotFoundException e, HttpServletRequest request) {
+		ErrosPadrao err = new ErrosPadrao(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
 	}
 }
