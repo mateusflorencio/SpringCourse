@@ -1,11 +1,12 @@
 package com.florencio.springcourse.services;
 
-import java.net.MalformedURLException;
+import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +43,12 @@ public class ClienteService {
 
 	@Autowired
 	private S3Service s3Service;
+	
+	@Autowired
+	private ImageService imageService;
+	
+	@Value("${img.prefix.client.profile}")
+	private String prefix;
 
 	public Cliente find(Integer id) {
 
@@ -120,18 +127,9 @@ public class ClienteService {
 		if (user == null) {
 			throw new AuthorizationException("É necessário estar logado para fazer realizar alterações na imagem");
 		}
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+		String fileName = prefix + user.getId() + ".jpg";
+		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
 
-		URI uri = s3Service.uploadFile(multipartFile);
-
-		Optional<Cliente> cli = repo.findById(user.getId());
-		Cliente cli2 = cli.orElse(null);
-		try {
-			cli2.setImageUrl(uri.toURL());
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		repo.save(cli2);
-		return uri;
 	}
 }
