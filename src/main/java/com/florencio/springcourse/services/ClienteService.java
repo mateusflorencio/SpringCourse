@@ -1,5 +1,6 @@
 package com.florencio.springcourse.services;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,7 @@ import com.florencio.springcourse.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class ClienteService {
-	
+
 	@Autowired
 	private BCryptPasswordEncoder pe;
 
@@ -38,18 +39,17 @@ public class ClienteService {
 
 	@Autowired
 	private EnderecoRepository repoEnd;
-	
+
 	@Autowired
 	private S3Service s3Service;
 
-	
 	public Cliente find(Integer id) {
-		
-		UserSS user= UserService.authenticated();
-		if(user==null || !user.hasRole(Perfil.ADMIN)  && !id.equals(user.getId())) {
+
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acesso Negado");
 		}
-		
+
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
@@ -57,7 +57,7 @@ public class ClienteService {
 
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);
-		obj=repo.save(obj);
+		obj = repo.save(obj);
 		repoEnd.saveAll(obj.getEnderecos());
 		return obj;
 	}
@@ -114,8 +114,24 @@ public class ClienteService {
 		return cli;
 
 	}
-	
+
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
-		return s3Service.uploadFile(multipartFile);
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("É necessário estar logado para fazer realizar alterações na imagem");
+		}
+
+		URI uri = s3Service.uploadFile(multipartFile);
+
+		Optional<Cliente> cli = repo.findById(user.getId());
+		Cliente cli2 = cli.orElse(null);
+		try {
+			cli2.setImageUrl(uri.toURL());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		repo.save(cli2);
+		return uri;
 	}
 }

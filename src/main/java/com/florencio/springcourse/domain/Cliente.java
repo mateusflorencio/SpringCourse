@@ -1,6 +1,8 @@
 package com.florencio.springcourse.domain;
 
 import java.io.Serializable;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -54,6 +56,8 @@ public class Cliente implements Serializable {
 	@ElementCollection(fetch=FetchType.EAGER)
 	@CollectionTable(name="PERFIS")
 	private Set<Integer> perfis = new HashSet<>();
+	
+	private URL imageUrl;
 
 	public Cliente() {
 		addPerfil(Perfil.CLEINTE);
@@ -165,6 +169,14 @@ public class Cliente implements Serializable {
 			return false;
 		Cliente other = (Cliente) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public URL getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(URL imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 }
