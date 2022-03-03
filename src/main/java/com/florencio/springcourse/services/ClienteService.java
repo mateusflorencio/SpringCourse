@@ -43,13 +43,13 @@ public class ClienteService {
 
 	@Autowired
 	private S3Service s3Service;
-	
+
 	@Autowired
 	private ImageService imageService;
-	
+
 	@Value("${img.prefix.client.profile}")
 	private String prefix;
-	
+
 	@Value("${img.profile.size}")
 	private Integer size;
 
@@ -64,6 +64,7 @@ public class ClienteService {
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
+	
 
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);
@@ -71,18 +72,21 @@ public class ClienteService {
 		repoEnd.saveAll(obj.getEnderecos());
 		return obj;
 	}
+	
 
 	public Cliente update(Cliente obj) {
 		Cliente newObj = find(obj.getId());
 		updateData(newObj, obj);
 		return repo.save(newObj);
 	}
+	
 
 	private void updateData(Cliente newObj, Cliente obj) {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
 
 	}
+	
 
 	public void delete(Integer id) {
 		find(id);
@@ -97,15 +101,32 @@ public class ClienteService {
 	public List<Cliente> findAll() {
 		return repo.findAll();
 	}
+	
+
+	public Cliente findByEmail(String email) {
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+
+		Cliente cli = repo.findByEmail(email);
+		if (cli == null) {
+			throw new ObjectNotFoundException("cliente não encontrado" + email);
+		}
+		return cli;
+	}
+	
 
 	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
 	}
 
+	
 	public Cliente fromDto(ClienteDTO objDto) {
 		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null, null);
 	}
+	
 
 	public Cliente fromDto(ClienteNewDTO objDto) {
 		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(),
@@ -124,6 +145,7 @@ public class ClienteService {
 		return cli;
 
 	}
+	
 
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
 		UserSS user = UserService.authenticated();
@@ -131,10 +153,10 @@ public class ClienteService {
 			throw new AuthorizationException("É necessário estar logado para fazer realizar alterações na imagem");
 		}
 		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
-		
+
 		jpgImage = imageService.cropSquare(jpgImage);
 		jpgImage = imageService.resize(jpgImage, size);
-		
+
 		String fileName = prefix + user.getId() + ".jpg";
 		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
 
