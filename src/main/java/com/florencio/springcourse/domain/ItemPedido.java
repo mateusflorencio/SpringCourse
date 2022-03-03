@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class ItemPedido implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@EmbeddedId // usar essa anotação pelo fato da chave ser composta
 	@JsonIgnore
 	private ItemPedidoPK id = new ItemPedidoPK();
@@ -25,7 +25,7 @@ public class ItemPedido implements Serializable {
 	public ItemPedido() {
 	}
 
-	public ItemPedido(Produto produto, Pedido pedido, Double desconto, Integer quantidade, Double preco) {
+	public ItemPedido(Pedido pedido, Produto produto, Double desconto, Integer quantidade, Double preco) {
 		super();
 		id.setPedido(pedido);
 		id.setProduto(produto);
@@ -33,26 +33,26 @@ public class ItemPedido implements Serializable {
 		this.quantidade = quantidade;
 		this.preco = preco;
 	}
-	
+
 	public Double getSubTotal() {
-		return (preco-desconto)*quantidade;
+		return (preco - desconto) * quantidade;
 	}
 
 	@JsonIgnore
 	public Pedido getPedido() {
 		return id.getPedido();
 	}
-	
-	//adicionar o pedido ao item pedido. O frameWork para inserir o produto só consegue atraves do metodo set, e não pelo construtor
+
+	// adicionar o pedido ao item pedido. O frameWork para inserir o produto só
+	// consegue atraves do metodo set, e não pelo construtor
 	public void setPedido(Pedido pedido) {
 		id.setPedido(pedido);
 	}
-	
+
 	public void setProduto(Produto produto) {
 		id.setProduto(produto);
 	}
 
-	
 	public Produto getProduto() {
 		return id.getProduto();
 	}
@@ -108,7 +108,7 @@ public class ItemPedido implements Serializable {
 
 	@Override
 	public String toString() {
-		NumberFormat nf=NumberFormat.getCurrencyInstance (new Locale( "pr", "BR"));
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pr", "BR"));
 		StringBuilder builder = new StringBuilder();
 		builder.append(getProduto().getNome());
 		builder.append(", Qte: ");
@@ -120,8 +120,5 @@ public class ItemPedido implements Serializable {
 		builder.append("\n");
 		return builder.toString();
 	}
-	
-	
-	
 
 }
